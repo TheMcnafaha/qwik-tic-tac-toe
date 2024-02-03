@@ -6,7 +6,7 @@ export default component$(() => {
   return (
     <>
       <main class="flex h-screen items-center justify-center">
-        <Grid colunms={3} rows={3} />
+        <Grid colunms={20} rows={20} />
       </main>
     </>
   );
