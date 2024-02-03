@@ -1,15 +1,13 @@
 import { component$ } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
+import { Grid } from "~/components/grid/grid";
 
 export default component$(() => {
   return (
     <>
-      <h1>Hi 👋</h1>
-      <p>
-        Can't wait to see what you build with qwik!
-        <br />
-        Happy coding.
-      </p>
+      <main class="flex h-screen items-center justify-center">
+        <Grid colunms={3} rows={3} />
+      </main>
     </>
   );
 });
