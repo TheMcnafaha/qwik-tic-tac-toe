@@ -1,4 +1,5 @@
-import { Slot, component$ } from "@builder.io/qwik";
+import { Slot, component$, useSignal } from "@builder.io/qwik";
+import { SquarePTag } from "../square/square";
 
 export interface GridProps {
   rows: number;
@@ -42,7 +43,6 @@ const GridCol = component$<GridRowAndColProps>((props) => {
     </div>
   );
 });
-
 function getGrid(cols: number, rows: number) {
   const grid = [];
   for (let cIndex = 0; cIndex < cols; cIndex++) {
@@ -50,7 +50,7 @@ function getGrid(cols: number, rows: number) {
     for (let rIndex = 0; rIndex < rows; rIndex++) {
       innerCol.push(
         <GridRow index={rIndex} max={rows}>
-          " "
+          <SquarePTag size={30} isXTurn={false} />
         </GridRow>,
       );
     }
