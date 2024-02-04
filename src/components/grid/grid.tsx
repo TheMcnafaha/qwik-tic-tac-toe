@@ -5,6 +5,7 @@ import {
   createContextId,
   useContextProvider,
   useSignal,
+  PropsOf,
 } from "@builder.io/qwik";
 import { SquarePTag, type SquareValues } from "../square/square";
 type GridContextProps = {
@@ -19,10 +20,10 @@ export interface GridProps {
 }
 export const GridContext = createContextId<Grid2dArr>("grid.context");
 
-export interface GridRowAndColProps {
+export type GridRowAndColProps = {
   index: number;
   max: number;
-}
+} & PropsOf<"div">;
 export const Grid = component$<GridProps>((props) => {
   if (props.colunms < 1 || props.rows < 1) {
     throw Error("bad def");
@@ -67,7 +68,11 @@ function getJSXGrid(cols: number, rows: number) {
     for (let rIndex = 0; rIndex < rows; rIndex++) {
       innerCol.push(
         <GridRow index={rIndex} max={rows}>
-          <SquarePTag size={30} isXTurn={false} />
+          <SquarePTag
+            pos={{ col: cIndex, row: rIndex }}
+            size={30}
+            isXTurn={false}
+          />
         </GridRow>,
       );
     }
