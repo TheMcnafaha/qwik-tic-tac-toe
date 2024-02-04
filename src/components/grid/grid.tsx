@@ -7,7 +7,7 @@ import {
   useSignal,
   PropsOf,
 } from "@builder.io/qwik";
-import { SquarePTag, type SquareValues } from "../square/square";
+import { SquarePTag, type SquareValues, Pos } from "../square/square";
 type GridContextProps = {
   isXTurnSig: Signal<boolean>;
   grid: Signal<Grid2dArr>;
@@ -18,20 +18,40 @@ export interface GridProps {
   rows: number;
   colunms: number;
 }
+type Board = Grid2dArr[];
+export const BoardContext = createContextId<Board>("board.context");
 export const GridContext = createContextId<Grid2dArr>("grid.context");
-
+export const XToMove = createContextId<boolean>("isX.context");
+export const lastMove = createContextId<Signal<Pos>>("lastM.context");
 export type GridRowAndColProps = {
   index: number;
   max: number;
 } & PropsOf<"div">;
 export const Grid = component$<GridProps>((props) => {
+  function getGrid(cols: number, rows: number): Grid2dArr {
+    const grid: Grid2dArr = [];
+    for (let cIndex = 0; cIndex < cols; cIndex++) {
+      let innerCol = [];
+      for (let rIndex = 0; rIndex < rows; rIndex++) {
+        const favSig = useSignal<SquareValues>(" ");
+        innerCol.push(favSig);
+      }
+      grid.push(innerCol);
+      innerCol = [];
+    }
+
+    return grid;
+  }
   if (props.colunms < 1 || props.rows < 1) {
     throw Error("bad def");
   }
   const jsxGrid = getJSXGrid(props.colunms, props.rows);
   const grid = getGrid(props.colunms, props.rows);
+  const lastM = useSignal<Pos>({ col: -1, row: -1 });
   console.log("fav grid ", grid);
   useContextProvider(GridContext, grid);
+  useContextProvider(BoardContext, [grid]);
+  useContextProvider(lastMove, lastM);
   return <>{jsxGrid}</>;
 });
 
@@ -40,6 +60,7 @@ const GridRow = component$<GridRowAndColProps>((props) => {
   if (props.index >= props.max - 1) {
     className = "";
   }
+
   return (
     <>
       <div class={className}>
@@ -81,20 +102,6 @@ function getJSXGrid(cols: number, rows: number) {
         {innerCol}
       </GridCol>,
     );
-    innerCol = [];
-  }
-
-  return grid;
-}
-function getGrid(cols: number, rows: number): Grid2dArr {
-  const grid: Grid2dArr = [];
-  for (let cIndex = 0; cIndex < cols; cIndex++) {
-    let innerCol = [];
-    for (let rIndex = 0; rIndex < rows; rIndex++) {
-      const favSig = useSignal<SquareValues>(" ");
-      innerCol.push(favSig);
-    }
-    grid.push(innerCol);
     innerCol = [];
   }
 
