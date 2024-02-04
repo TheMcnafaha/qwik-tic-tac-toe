@@ -1,10 +1,23 @@
-import { Slot, component$, useSignal } from "@builder.io/qwik";
-import { SquarePTag } from "../square/square";
-
+import {
+  Signal,
+  Slot,
+  component$,
+  createContextId,
+  useContextProvider,
+  useSignal,
+} from "@builder.io/qwik";
+import { SquarePTag, type SquareValues } from "../square/square";
+type GridContextProps = {
+  isXTurnSig: Signal<boolean>;
+  grid: Signal<Grid2dArr>;
+};
+type Grid1DArr = Signal<SquareValues>[];
+export type Grid2dArr = Array<Grid1DArr>;
 export interface GridProps {
   rows: number;
   colunms: number;
 }
+export const GridContext = createContextId<Grid2dArr>("grid.context");
 
 export interface GridRowAndColProps {
   index: number;
@@ -14,7 +27,11 @@ export const Grid = component$<GridProps>((props) => {
   if (props.colunms < 1 || props.rows < 1) {
     throw Error("bad def");
   }
-  return <>{getGrid(props.colunms, props.rows)}</>;
+  const jsxGrid = getJSXGrid(props.colunms, props.rows);
+  const grid = getGrid(props.colunms, props.rows);
+  console.log("fav grid ", grid);
+  useContextProvider(GridContext, grid);
+  return <>{jsxGrid}</>;
 });
 
 const GridRow = component$<GridRowAndColProps>((props) => {
@@ -43,7 +60,7 @@ const GridCol = component$<GridRowAndColProps>((props) => {
     </div>
   );
 });
-function getGrid(cols: number, rows: number) {
+function getJSXGrid(cols: number, rows: number) {
   const grid = [];
   for (let cIndex = 0; cIndex < cols; cIndex++) {
     let innerCol = [];
@@ -60,10 +77,21 @@ function getGrid(cols: number, rows: number) {
       </GridCol>,
     );
     innerCol = [];
-    console.log(innerCol.length);
   }
-  console.log("running");
 
-  console.log("my leng", grid.length);
+  return grid;
+}
+function getGrid(cols: number, rows: number): Grid2dArr {
+  const grid: Grid2dArr = [];
+  for (let cIndex = 0; cIndex < cols; cIndex++) {
+    let innerCol = [];
+    for (let rIndex = 0; rIndex < rows; rIndex++) {
+      const favSig = useSignal<SquareValues>(" ");
+      innerCol.push(favSig);
+    }
+    grid.push(innerCol);
+    innerCol = [];
+  }
+
   return grid;
 }
