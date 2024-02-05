@@ -12,7 +12,7 @@ type GridContextProps = {
   isXTurnSig: Signal<boolean>;
   grid: Signal<Grid2dArr>;
 };
-type Grid1DArr = Signal<SquareValues>[];
+export type Grid1DArr = Signal<SquareValues>[];
 export type Grid2dArr = Array<Grid1DArr>;
 export interface GridProps {
   rows: number;
