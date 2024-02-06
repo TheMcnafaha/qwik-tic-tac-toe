@@ -24,43 +24,52 @@ export default function solve(
   start: Point,
 ): Point[] {
   const seen: boolean[][] = [];
+  const seenOnce: boolean[][] = [];
   const path: Point[] = [];
+  const lol: Point[] = [];
   for (let index = 0; index < maze.length; index++) {
     seen.push(new Array(maze[0].length).fill(false));
+    seenOnce.push(new Array(maze[0].length).fill(false));
   }
-  walk(maze, wall, start, seen, path);
-  return path;
+  walk(maze, wall, start, seen, seenOnce, path, lol);
+  return lol;
 }
 function walk(
   maze: Grid2dArr,
   wall: string,
   curr: Point,
   seen: boolean[][],
+  seenOnce: boolean[][],
   path: Point[],
+  lol: Point[],
 ): boolean {
   const offXAxis = curr.x < 0 || curr.x >= maze[0].length;
   const offYAxis = curr.y < 0 || curr.y >= maze.length;
-
   if (offXAxis || offYAxis) {
     return false;
   }
 
+  const isNewEntry = seen[curr.y][curr.x] == false;
+  const entry = maze[curr.y][curr.x];
   if (maze[curr.y][curr.x].value === wall) {
     return false;
   }
-  if (path.length === 3) {
-    console.log("ending");
+  if (lol.length === 3) {
     return true;
   }
   if (seen[curr.y][curr.x]) {
     return false;
   }
-  seen[curr.y][curr.x] = true;
+
+  if (entry.value === "X") {
+    lol.push(curr);
+  }
   path.push(curr);
+  seen[curr.y][curr.x] = true;
   for (let index = 0; index < dir.length; index++) {
     const [x, y] = dir[index];
     const newPoint = { x: curr.x + x, y: curr.y + y };
-    if (walk(maze, wall, newPoint, seen, path)) {
+    if (walk(maze, wall, newPoint, seen, seenOnce, path, lol)) {
       return true;
     }
   }
