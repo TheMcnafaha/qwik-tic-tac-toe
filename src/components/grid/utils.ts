@@ -1,3 +1,4 @@
+import { SquareValues } from "../square/square";
 import { Grid1DArr, Grid2dArr } from "./grid";
 
 type Point = {
@@ -21,6 +22,7 @@ export function find3() {
 export default function solve(
   maze: Grid2dArr,
   wall: string,
+  key: SquareValues,
   start: Point,
 ): Point[] {
   const seen: boolean[][] = [];
@@ -31,17 +33,17 @@ export default function solve(
     seen.push(new Array(maze[0].length).fill(false));
     seenOnce.push(new Array(maze[0].length).fill(false));
   }
-  walk(maze, wall, start, seen, seenOnce, path, lol);
+  walk(maze, wall, key, start, seen, path, lol);
   return lol;
 }
 function walk(
   maze: Grid2dArr,
   wall: string,
+  key: SquareValues,
   curr: Point,
   seen: boolean[][],
-  seenOnce: boolean[][],
   path: Point[],
-  lol: Point[],
+  values: Point[],
 ): boolean {
   const offXAxis = curr.x < 0 || curr.x >= maze[0].length;
   const offYAxis = curr.y < 0 || curr.y >= maze.length;
@@ -49,27 +51,26 @@ function walk(
     return false;
   }
 
-  const isNewEntry = seen[curr.y][curr.x] == false;
   const entry = maze[curr.y][curr.x];
   if (maze[curr.y][curr.x].value === wall) {
     return false;
   }
-  if (lol.length === 3) {
+  if (values.length === 3) {
     return true;
   }
   if (seen[curr.y][curr.x]) {
     return false;
   }
 
-  if (entry.value === "X") {
-    lol.push(curr);
+  if (entry.value === key) {
+    values.push(curr);
   }
   path.push(curr);
   seen[curr.y][curr.x] = true;
   for (let index = 0; index < dir.length; index++) {
     const [x, y] = dir[index];
     const newPoint = { x: curr.x + x, y: curr.y + y };
-    if (walk(maze, wall, newPoint, seen, seenOnce, path, lol)) {
+    if (walk(maze, wall, key, newPoint, seen, path, values)) {
       return true;
     }
   }
