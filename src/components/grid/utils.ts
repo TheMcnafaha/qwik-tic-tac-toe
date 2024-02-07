@@ -44,6 +44,7 @@ function walk(
   seen: boolean[][],
   path: Point[],
   values: Point[],
+  idx: number = -1,
 ): boolean {
   const offXAxis = curr.x < 0 || curr.x >= maze[0].length;
   const offYAxis = curr.y < 0 || curr.y >= maze.length;
@@ -63,14 +64,16 @@ function walk(
   }
 
   if (entry.value === key) {
+    console.log(idx);
     values.push(curr);
   }
   path.push(curr);
   seen[curr.y][curr.x] = true;
   for (let index = 0; index < dir.length; index++) {
     const [x, y] = dir[index];
+    idx = index;
     const newPoint = { x: curr.x + x, y: curr.y + y };
-    if (walk(maze, wall, key, newPoint, seen, path, values)) {
+    if (walk(maze, wall, key, newPoint, seen, path, values, idx)) {
       return true;
     }
   }

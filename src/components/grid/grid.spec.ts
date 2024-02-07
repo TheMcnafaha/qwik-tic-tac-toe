@@ -27,16 +27,29 @@ test("work algo", ()=>{
   // mazefier(ex1Grid,"X")
   // expect( mazefier(ex1Grid)).toBe(2)
   const lol=solve(ex1Grid as Grid2dArr,"O","X",{x:0,y:0})
-  const lol2=solve(ex2Grid as Grid2dArr,"O","X",{x:0,y:1})
-  const lol3=solve(ex3Grid as Grid2dArr,"O","X",{x:0,y:1})
-  const lol4=solve(ex4Grid as Grid2dArr,"O","X",{x:0,y:0})
   console.log(lol);
-  console.log(lol2);
-  console.log(lol3);
-  console.log(lol4);
   expect(lol.length).toBe(3)
+  
+})
+test("work algo", ()=>{
+  // mazefier(ex1Grid,"X")
+  // expect( mazefier(ex1Grid)).toBe(2)
+  const lol2=solve(ex2Grid as Grid2dArr,"O","X",{x:0,y:1})
+  console.log(lol2);
   expect(lol2.length).toBe(3)
+  
+})
+test("work algo", ()=>{
+  // mazefier(ex1Grid,"X")
+  // expect( mazefier(ex1Grid)).toBe(2)
+  const lol3=solve(ex3Grid as Grid2dArr,"O","X",{x:0,y:1})
+  console.log(lol3);
   expect(lol3.length).toBe(0)
+  
+})
+test("work algo", ()=>{
+  const lol4=solve(ex4Grid as Grid2dArr,"O","X",{x:0,y:0})
+  console.log(lol4);
   expect(lol4.length).toBe(3)
   
 })
