@@ -12,7 +12,7 @@ type ValueProps = {
 export function testlol() {
   return "working";
 }
-
+type Strats = "ortho" | "diago";
 const dirOrth = [
   [0, 1],
   [0, -1],
@@ -33,19 +33,21 @@ export default function solve(
   key: SquareValues,
   start: Point,
 ): Point[] {
-  const seen: boolean[][] = [];
-  const seenOnce: boolean[][] = [];
-  const path: Point[] = [];
-  const lol: ValueProps = [];
-  for (let index = 0; index < maze.length; index++) {
-    seen.push(new Array(maze[0].length).fill(false));
-    seenOnce.push(new Array(maze[0].length).fill(false));
+  // const seen: boolean[][] = [];
+  // const path: Point[] = [];
+  // const lol: ValueProps = [];
+  // for (let index = 0; index < maze.length; index++) {
+  //   seen.push(new Array(maze[0].length).fill(false));
+  // }
+  const [seen, path, values] = getWalkArgs(maze, wall);
+  const found = walk(maze, wall, key, start, seen, path, values, "ortho");
+  if (!found) {
+    walk(maze, wall, key, start, seen, path, values, "ortho");
   }
-  walkDiago(maze, wall, key, start, seen, path, lol);
-  return lol;
+  return values;
 }
 
-function walkDiago(
+function walk(
   maze: Grid2dArr,
   wall: string,
   key: SquareValues,
@@ -53,6 +55,7 @@ function walkDiago(
   seen: boolean[][],
   path: Point[],
   values: ValueProps,
+  strat: Strats,
   idx: number = -1,
 ): boolean {
   const offXAxis = curr.x < 0 || curr.x >= maze[0].length;
@@ -89,10 +92,11 @@ function walkDiago(
   }
   path.push(curr);
   seen[curr.y][curr.x] = true;
-  for (let index = 0; index < dirDiago.length; index++) {
-    const [x, y] = dirDiago[index];
+  const dir = strat === "ortho" ? dirOrth : dirDiago;
+  for (let index = 0; index < dir.length; index++) {
+    const [x, y] = dir[index];
     const newPoint = { x: curr.x + x, y: curr.y + y };
-    if (walkDiago(maze, wall, key, newPoint, seen, path, values, index)) {
+    if (walk(maze, wall, key, newPoint, seen, path, values, strat, index)) {
       return true;
     }
   }
@@ -163,4 +167,14 @@ function isPair(idx: number, prevIdx) {
   if (idx === 4 || idx === 5) {
     return prevIdx === 4 || prevIdx === 5;
   }
+}
+
+function getWalkArgs(maze: Grid2dArr, wall: string) {
+  const seen: boolean[][] = [];
+  const path: Point[] = [];
+  const values: ValueProps = [];
+  for (let index = 0; index < maze.length; index++) {
+    seen.push(new Array(maze[0].length).fill(false));
+  }
+  return [seen, path, values];
 }

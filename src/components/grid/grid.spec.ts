@@ -36,7 +36,7 @@ const ex3Grid= [
   expect(lol3.length).toBe(0)
   
 })
-test("work algo", ()=>{
+test.only("work algo", ()=>{
 const ex4Grid= [
   [{value:"X"}, {value:"O"}, {value:"O"}],
   [{value:"X"}, {value:"X"}, {value:"X"}],
@@ -47,7 +47,7 @@ const ex4Grid= [
   expect(lol4.length).toBe(3)
   })
 
-test.only("work algo", ()=>{
+test("work algo", ()=>{
 const ex5Grid= [
   [{value:"X"}, {value:"O"}, {value:"O"}],
   [{value:"O"}, {value:"X"}, {value:"X"}],
