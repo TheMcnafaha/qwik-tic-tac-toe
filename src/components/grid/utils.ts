@@ -1,10 +1,14 @@
 import { SquareValues } from "../square/square";
-import { Grid1DArr, Grid2dArr } from "./grid";
+import { Grid2dArr } from "./grid";
 
 type Point = {
   x: number;
   y: number;
 };
+type ValueProps = {
+  point: Point;
+  dir: number;
+}[];
 export function testlol() {
   return "working";
 }
@@ -28,7 +32,7 @@ export default function solve(
   const seen: boolean[][] = [];
   const seenOnce: boolean[][] = [];
   const path: Point[] = [];
-  const lol: Point[] = [];
+  const lol: ValueProps = [];
   for (let index = 0; index < maze.length; index++) {
     seen.push(new Array(maze[0].length).fill(false));
     seenOnce.push(new Array(maze[0].length).fill(false));
@@ -43,7 +47,7 @@ function walk(
   curr: Point,
   seen: boolean[][],
   path: Point[],
-  values: Point[],
+  values: ValueProps,
   idx: number = -1,
 ): boolean {
   const offXAxis = curr.x < 0 || curr.x >= maze[0].length;
@@ -64,19 +68,38 @@ function walk(
   }
 
   if (entry.value === key) {
-    console.log(idx);
-    values.push(curr);
+    const last = values.at(-1);
+    if (values.length > 0 && idx !== -1 && last.dir !== -1) {
+      if (!isPair(idx, last?.dir)) {
+        console.log("new boi ", last.dir, idx);
+        // this only works because arr is size 3,
+        // the dynamic solution is to make the arr equal the last two elems,
+        // which for a size 3 arr is always the case with shift
+        values.shift();
+      }
+    }
+
+    const obj = { point: curr, dir: idx };
+    values.push(obj);
   }
   path.push(curr);
   seen[curr.y][curr.x] = true;
   for (let index = 0; index < dir.length; index++) {
     const [x, y] = dir[index];
-    idx = index;
     const newPoint = { x: curr.x + x, y: curr.y + y };
-    if (walk(maze, wall, key, newPoint, seen, path, values, idx)) {
+    if (walk(maze, wall, key, newPoint, seen, path, values, index)) {
       return true;
     }
   }
   path.pop();
   return false;
+}
+
+function isPair(idx: number, prevIdx) {
+  if (idx === 0 || idx === 1) {
+    return prevIdx === 0 || prevIdx === 1;
+  }
+  if (idx === 2 || idx === 3) {
+    return prevIdx === 2 || prevIdx === 3;
+  }
 }
