@@ -40,9 +40,11 @@ export default function solve(
   //   seen.push(new Array(maze[0].length).fill(false));
   // }
   const [seen, path, values] = getWalkArgs(maze, wall);
-  const found = walk(maze, wall, key, start, seen, path, values, "ortho");
+  const found = walk(maze, wall, key, start, seen, path, values, "diago");
   if (!found) {
+    const [seen, path, values] = getWalkArgs(maze, wall);
     walk(maze, wall, key, start, seen, path, values, "ortho");
+    return values;
   }
   return values;
 }
