@@ -50,10 +50,51 @@ const ex4Grid= [
 test("work algo", ()=>{
 const ex5Grid= [
   [{value:"X"}, {value:"O"}, {value:"O"}],
-  [{value:"O"}, {value:"X"}, {value:"X"}],
+  [{value:"X"}, {value:"X"}, {value:"X"}],
   [{value:"O"}, {value:"O"}, {value:"X"}],
 ];
   const lol5=solve(ex5Grid as Grid2dArr,"O","X",{x:0,y:0})
+  console.log(lol5);
+  expect(lol5.length).toBe(3)
+  })
+test("work algo", ()=>{
+const ex5Grid= [
+  [{value:"X"}, {value:"O"}, {value:"O"}],
+  [{value:"X"}, {value:"X"}, {value:"X"}],
+  [{value:"O"}, {value:"O"}, {value:"X"}],
+];
+  const lol5=solve(ex5Grid as Grid2dArr,"O","X",{x:2,y:2})
+  console.log(lol5);
+  expect(lol5.length).toBe(3)
+  })
+test("work algo", ()=>{
+const ex5Grid= [
+  [{value:"X"}, {value:"O"}, {value:"O"}],
+  [{value:"X"}, {value:"X"}, {value:"X"}],
+  [{value:"O"}, {value:"O"}, {value:"X"}],
+];
+  const lol5=solve(ex5Grid as Grid2dArr,"O","X",{x:1,y:1})
+  console.log(lol5);
+  expect(lol5.length).toBe(3)
+  })
+
+test("work algo", ()=>{
+const ex5Grid= [
+  [{value:"O"}, {value:"O"}, {value:"X"}],
+  [{value:"O"}, {value:"X"}, {value:"X"}],
+  [{value:"X"}, {value:"O"}, {value:"O"}],
+];
+  const lol5=solve(ex5Grid as Grid2dArr,"O","X",{x:2,y:0})
+  console.log(lol5);
+  expect(lol5.length).toBe(3)
+  })
+test("work algo", ()=>{
+const ex5Grid= [
+  [{value:"O"}, {value:"O"}, {value:"X"}],
+  [{value:"O"}, {value:"X"}, {value:"X"}],
+  [{value:"X"}, {value:"O"}, {value:"O"}],
+];
+  const lol5=solve(ex5Grid as Grid2dArr,"O","X",{x:0,y:2})
   console.log(lol5);
   expect(lol5.length).toBe(3)
   })

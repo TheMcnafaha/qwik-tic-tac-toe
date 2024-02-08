@@ -22,6 +22,8 @@ const dirOrth = [
 const dirDiago = [
   [1, 1],
   [-1, -1],
+  [-1, 1],
+  [1, -1],
 ];
 export function find3() {
   const arr: string[] = [];
@@ -32,17 +34,15 @@ export default function solve(
   wall: string,
   key: SquareValues,
   start: Point,
-): Point[] {
-  // const seen: boolean[][] = [];
-  // const path: Point[] = [];
-  // const lol: ValueProps = [];
-  // for (let index = 0; index < maze.length; index++) {
-  //   seen.push(new Array(maze[0].length).fill(false));
-  // }
-  const [seen, path, values] = getWalkArgs(maze, wall);
+): ValueProps {
+  const [seen, path, values] = getWalkArgs(maze);
   const found = walk(maze, wall, key, start, seen, path, values, "diago");
-  if (!found) {
-    const [seen, path, values] = getWalkArgs(maze, wall);
+  // const found = false;
+  console.log(" i have found ", found, values);
+
+  // the second conditon is bc of false neg
+  if (!found && values.length !== 3) {
+    const [seen, path, values] = getWalkArgs(maze);
     walk(maze, wall, key, start, seen, path, values, "ortho");
     return values;
   }
@@ -77,11 +77,13 @@ function walk(
     return false;
   }
 
+  const last = values.at(-1);
   if (entry.value === key) {
-    const last = values.at(-1);
-    if (values.length > 0 && idx !== -1 && last.dir !== -1) {
-      if (!isPair(idx, last?.dir)) {
-        console.log("new boi ", last.dir, idx);
+    console.log("idx ", idx);
+    const appliedDir = last?.dir ?? -1;
+    if (values.length > 0 && idx !== -1 && appliedDir !== -1) {
+      if (!isPair(idx, appliedDir)) {
+        console.log("new boi ", appliedDir, idx);
         // this only works because arr is size 3,
         // the dynamic solution is to make the arr equal the last two elems,
         // which for a size 3 arr is always the case with shift
@@ -105,61 +107,8 @@ function walk(
   path.pop();
   return false;
 }
-function walkOrtho(
-  maze: Grid2dArr,
-  wall: string,
-  key: SquareValues,
-  curr: Point,
-  seen: boolean[][],
-  path: Point[],
-  values: ValueProps,
-  idx: number = -1,
-): boolean {
-  const offXAxis = curr.x < 0 || curr.x >= maze[0].length;
-  const offYAxis = curr.y < 0 || curr.y >= maze.length;
-  if (offXAxis || offYAxis) {
-    return false;
-  }
 
-  const entry = maze[curr.y][curr.x];
-  if (maze[curr.y][curr.x].value === wall) {
-    return false;
-  }
-  if (values.length === 3) {
-    return true;
-  }
-  if (seen[curr.y][curr.x]) {
-    return false;
-  }
-
-  if (entry.value === key) {
-    const last = values.at(-1);
-    if (values.length > 0 && idx !== -1 && last.dir !== -1) {
-      if (!isPair(idx, last?.dir)) {
-        console.log("new boi ", last.dir, idx);
-        // this only works because arr is size 3,
-        // the dynamic solution is to make the arr equal the last two elems,
-        // which for a size 3 arr is always the case with shift
-        values.shift();
-      }
-    }
-
-    const obj = { point: curr, dir: idx };
-    values.push(obj);
-  }
-  path.push(curr);
-  seen[curr.y][curr.x] = true;
-  for (let index = 0; index < dirOrth.length; index++) {
-    const [x, y] = dirOrth[index];
-    const newPoint = { x: curr.x + x, y: curr.y + y };
-    if (walkOrtho(maze, wall, key, newPoint, seen, path, values, index)) {
-      return true;
-    }
-  }
-  path.pop();
-  return false;
-}
-function isPair(idx: number, prevIdx) {
+function isPair(idx: number, prevIdx: number) {
   if (idx === 0 || idx === 1) {
     return prevIdx === 0 || prevIdx === 1;
   }
@@ -171,7 +120,7 @@ function isPair(idx: number, prevIdx) {
   }
 }
 
-function getWalkArgs(maze: Grid2dArr, wall: string) {
+function getWalkArgs(maze: Grid2dArr): [boolean[][], Point[], ValueProps] {
   const seen: boolean[][] = [];
   const path: Point[] = [];
   const values: ValueProps = [];
