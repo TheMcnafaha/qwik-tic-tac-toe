@@ -98,3 +98,13 @@ const ex5Grid= [
   console.log(lol5);
   expect(lol5.length).toBe(3)
   })
+test("work algo", ()=>{
+const ex5Grid= [
+  [{value:"O"}, {value:"O"}, {value:"X"}],
+  [{value:"O"}, {value:"X"}, {value:"X"}],
+  [{value:"X"}, {value:"O"}, {value:"O"}],
+];
+  const lol5=solve(ex5Grid as Grid2dArr,"O","X",{x:1,y:1})
+  console.log(lol5);
+  expect(lol5.length).toBe(3)
+  })
