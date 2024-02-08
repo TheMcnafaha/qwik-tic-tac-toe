@@ -1,7 +1,7 @@
 import { SquareValues } from "../square/square";
 import { type Grid2dArr } from "./grid";
 
-type Point = {
+export type Point = {
   x: number;
   y: number;
 };
@@ -29,13 +29,16 @@ export function find3() {
   const arr: string[] = [];
   return arr.length;
 }
-export default function solve(
+export function solve(
   maze: Grid2dArr,
   wall: string,
   key: SquareValues,
   start: Point,
 ): ValueProps {
   const [seen, path, values] = getWalkArgs(maze);
+  // // console.log(maze[0], seen, path, values);
+  console.log("lol ", maze[0][0].value);
+  // return;
   const found = walk(maze, wall, key, start, seen, path, values, "diago");
   // const found = false;
   console.log(" i have found ", found, values);

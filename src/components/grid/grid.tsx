@@ -6,8 +6,10 @@ import {
   useContextProvider,
   useSignal,
   PropsOf,
+  useTask$,
 } from "@builder.io/qwik";
-import { SquarePTag, type SquareValues, Pos } from "../square/square";
+import { SquarePTag, type SquareValues } from "../square/square";
+import { type Point, solve } from "./utils";
 type GridContextProps = {
   isXTurnSig: Signal<boolean>;
   grid: Signal<Grid2dArr>;
@@ -22,7 +24,7 @@ type Board = Grid2dArr[];
 export const BoardContext = createContextId<Board>("board.context");
 export const GridContext = createContextId<Grid2dArr>("grid.context");
 export const XToMove = createContextId<boolean>("isX.context");
-export const lastMove = createContextId<Signal<Pos>>("lastM.context");
+export const lastMove = createContextId<Signal<Point>>("lastM.context");
 export type GridRowAndColProps = {
   index: number;
   max: number;
@@ -47,11 +49,22 @@ export const Grid = component$<GridProps>((props) => {
   }
   const jsxGrid = getJSXGrid(props.colunms, props.rows);
   const grid = getGrid(props.colunms, props.rows);
-  const lastM = useSignal<Pos>({ col: -1, row: -1 });
+  const lastM = useSignal<Point>({ x: -1, y: -1 });
   console.log("fav grid ", grid);
   useContextProvider(GridContext, grid);
   useContextProvider(BoardContext, [grid]);
   useContextProvider(lastMove, lastM);
+  useTask$(({ track }) => {
+    track(() => {
+      lastM.value;
+    });
+    console.log(lastM.value);
+
+    const answer = solve(grid, "X", "O", lastM.value);
+    if (answer) {
+      console.log("ding ding ding");
+    }
+  });
   return <>{jsxGrid}</>;
 });
 
@@ -90,7 +103,7 @@ function getJSXGrid(cols: number, rows: number) {
       innerCol.push(
         <GridRow index={rIndex} max={rows}>
           <SquarePTag
-            pos={{ col: cIndex, row: rIndex }}
+            pos={{ y: cIndex, x: rIndex }}
             size={30}
             isXTurn={false}
           />

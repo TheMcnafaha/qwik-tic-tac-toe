@@ -1,22 +1,19 @@
 import { component$, $, useContext, createContextId } from "@builder.io/qwik";
 import { BoardContext, Grid2dArr, GridContext, lastMove } from "../grid/grid";
+import { Point } from "../grid/utils";
 
 export interface SquarePTagProps {
   isXTurn: boolean;
   size: number;
-  pos: Pos;
+  pos: Point;
 }
-export type Pos = {
-  col: number;
-  row: number;
-};
 export type SquareValues = " " | "X" | "O";
 export const SquarePTag = component$<SquarePTagProps>(
   ({ size, isXTurn, pos }) => {
     const grid = useContext(GridContext);
     const board = useContext(BoardContext);
     const lastM = useContext(lastMove);
-    const square = grid[pos.col][pos.row];
+    const square = grid[pos.y][pos.x];
     // dynamic tailwind bad bad
     const className = `width:${size}px; height:${size}px;`;
     console.log(pos);

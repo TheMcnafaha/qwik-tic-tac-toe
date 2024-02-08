@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import solve, {  testlol } from "./utils";
+import {  testlol,solve } from "./utils";
 import { Grid2dArr } from "./grid";
 
 test("adds 1 + 2 to equal 3", () => {
@@ -105,6 +105,16 @@ const ex5Grid= [
   [{value:"X"}, {value:"O"}, {value:"O"}],
 ];
   const lol5=solve(ex5Grid as Grid2dArr,"O","X",{x:1,y:1})
+  console.log(lol5);
+  expect(lol5.length).toBe(3)
+  })
+test("work algo", ()=>{
+const exGrid= [
+  [{value:" "}, {value:" "}, {value:" "}],
+  [{value:" "}, {value:"X"}, {value:"X"}],
+  [{value:"X"}, {value:" "}, {value:" "}],
+];
+  const lol5=solve(exGrid as Grid2dArr,"O","X",{x:1,y:1})
   console.log(lol5);
   expect(lol5.length).toBe(3)
   })
