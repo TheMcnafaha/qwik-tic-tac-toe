@@ -11,6 +11,7 @@ import {
   GridContext,
   PlayerStrgContext,
   LastMoveContext,
+  GameWContext,
 } from "../grid/context-ids";
 import { Point } from "../grid/utils";
 
@@ -27,12 +28,13 @@ export const SquarePTag = component$<SquarePTagProps>(
     const lastM = useContext(LastMoveContext);
     const playerSig = useContext(PlayerStrgContext);
     const square = grid[pos.y][pos.x];
+    const isW = useContext(GameWContext);
     const ref = useSignal(undefined);
     // dynamic tailwind bad bad
     const className = `width:${size}px; height:${size}px;`;
     console.log(pos);
     const setSquare = $(() => {
-      if (square.value !== " ") {
+      if (square.value !== " " || isW.value) {
         return;
       }
       lastM.value = pos;

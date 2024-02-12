@@ -10,3 +10,4 @@ export const GridContext = createContextId<Grid2dArr>("grid.context");
 export const PlayerStrgContext =
   createContextId<Signal<"X" | "O">>("isX.context");
 export const LastMoveContext = createContextId<Signal<Point>>("lastM.context");
+export const GameWContext = createContextId<Signal<boolean>>("GameW.Context");

@@ -12,6 +12,7 @@ import { SquarePTag, type SquareValues } from "../square/square";
 import { type Point, solve } from "./utils";
 import {
   BoardContext,
+  GameWContext,
   Grid2dArr,
   GridContext,
   LastMoveContext,
@@ -57,6 +58,7 @@ export const Grid = component$<GridProps>((props) => {
   useContextProvider(BoardContext, [grid]);
   useContextProvider(LastMoveContext, lastM);
   useContextProvider(PlayerStrgContext, playerSig);
+  useContextProvider(GameWContext, isGameWon);
   useTask$(({ track }) => {
     track(() => {
       lastM.value;
