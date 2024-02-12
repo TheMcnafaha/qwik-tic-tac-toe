@@ -84,7 +84,6 @@ function walk(
 
   const last = values.at(-1);
   if (entry.value === key) {
-    console.log("idx ", idx);
     const appliedDir = last?.dir ?? -1;
     if (values.length > 0 && idx !== -1 && appliedDir !== -1) {
       if (!isPair(idx, appliedDir)) {
@@ -102,8 +101,6 @@ function walk(
   seen[curr.y][curr.x] = true;
   const dir = strat === "ortho" ? dirOrth : dirDiago;
   for (let index = 0; index < dir.length; index++) {
-    console.log("mercy ", curr);
-
     const [x, y] = dir[index];
     const newPoint = { x: curr.x + x, y: curr.y + y };
     if (walk(maze, walls, key, newPoint, seen, path, values, strat, index)) {

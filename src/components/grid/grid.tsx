@@ -63,7 +63,7 @@ export const Grid = component$<GridProps>((props) => {
     });
     console.log(lastM.value);
     const nextPlyr = playerSig.value === "X" ? "O" : "X";
-    const answer = solve(grid, "", playerSig.value, lastM.value);
+    const answer = solve(grid, playerSig.value, lastM.value);
     console.log(
       "curr stuff ",
       answer.map((e) => e.point),
