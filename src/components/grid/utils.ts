@@ -36,13 +36,7 @@ export function solve(
   start: Point,
 ): ValueProps {
   const [seen, path, values] = getWalkArgs(maze);
-  // // console.log(maze[0], seen, path, values);
-  console.log("lol ", maze[0][0].value);
-  // return;
   const found = walk(maze, wall, key, start, seen, path, values, "diago");
-  // const found = false;
-  console.log(" i have found ", found, values);
-
   // the second conditon is bc of false neg
   if (!found && values.length !== 3) {
     const [seen, path, values] = getWalkArgs(maze);

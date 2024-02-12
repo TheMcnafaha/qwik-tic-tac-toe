@@ -10,6 +10,7 @@ import {
 } from "@builder.io/qwik";
 import { SquarePTag, type SquareValues } from "../square/square";
 import { type Point, solve } from "./utils";
+import { table } from "console";
 type GridContextProps = {
   isXTurnSig: Signal<boolean>;
   grid: Signal<Grid2dArr>;
@@ -23,7 +24,8 @@ export interface GridProps {
 type Board = Grid2dArr[];
 export const BoardContext = createContextId<Board>("board.context");
 export const GridContext = createContextId<Grid2dArr>("grid.context");
-export const XToMove = createContextId<boolean>("isX.context");
+export const PlayerStrgContext =
+  createContextId<Signal<"X" | "O">>("isX.context");
 export const lastMove = createContextId<Signal<Point>>("lastM.context");
 export type GridRowAndColProps = {
   index: number;
@@ -50,20 +52,30 @@ export const Grid = component$<GridProps>((props) => {
   const jsxGrid = getJSXGrid(props.colunms, props.rows);
   const grid = getGrid(props.colunms, props.rows);
   const lastM = useSignal<Point>({ x: -1, y: -1 });
+  const playerSig = useSignal<SquareValues>("O");
   console.log("fav grid ", grid);
   useContextProvider(GridContext, grid);
   useContextProvider(BoardContext, [grid]);
   useContextProvider(lastMove, lastM);
+  useContextProvider(PlayerStrgContext, playerSig);
   useTask$(({ track }) => {
     track(() => {
       lastM.value;
     });
     console.log(lastM.value);
+    const nextPlyr = playerSig.value === "X" ? "O" : "X";
+    const answer = solve(grid, "", playerSig.value, lastM.value);
+    console.log(
+      "curr stuff ",
+      answer.map((e) => e.point),
+      lastM.value,
+    );
+    console.table(grid.map((e) => e.map((e) => e.value)));
 
-    const answer = solve(grid, "X", "O", lastM.value);
-    if (answer) {
+    if (answer.length === 3) {
       console.log("ding ding ding");
     }
+    playerSig.value = nextPlyr;
   });
   return <>{jsxGrid}</>;
 });
@@ -119,4 +131,10 @@ function getJSXGrid(cols: number, rows: number) {
   }
 
   return grid;
+}
+function getWall(currPlayer: "X" | "O") {
+  if (currPlayer === "O") {
+    return "X";
+  }
+  return "O";
 }

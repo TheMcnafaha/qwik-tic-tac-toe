@@ -110,11 +110,11 @@ const ex5Grid= [
   })
 test("work algo", ()=>{
 const exGrid= [
-  [{value:" "}, {value:" "}, {value:" "}],
-  [{value:" "}, {value:"X"}, {value:"X"}],
-  [{value:"X"}, {value:" "}, {value:" "}],
+  [{value:" "}, {value:" "}, {value:"O"}],
+  [{value:" "}, {value:"O"}, {value:"X"}],
+  [{value:"O"}, {value:" "}, {value:" "}],
 ];
-  const lol5=solve(exGrid as Grid2dArr,"O","X",{x:1,y:1})
+  const lol5=solve(exGrid as Grid2dArr,"X","O",{x:1,y:1})
   console.log(lol5);
   expect(lol5.length).toBe(3)
   })

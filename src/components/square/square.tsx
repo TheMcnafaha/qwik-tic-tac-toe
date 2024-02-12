@@ -1,5 +1,17 @@
-import { component$, $, useContext, createContextId } from "@builder.io/qwik";
-import { BoardContext, Grid2dArr, GridContext, lastMove } from "../grid/grid";
+import {
+  component$,
+  $,
+  useContext,
+  createContextId,
+  useSignal,
+} from "@builder.io/qwik";
+import {
+  BoardContext,
+  Grid2dArr,
+  GridContext,
+  PlayerStrgContext,
+  lastMove,
+} from "../grid/grid";
 import { Point } from "../grid/utils";
 
 export interface SquarePTagProps {
@@ -13,7 +25,9 @@ export const SquarePTag = component$<SquarePTagProps>(
     const grid = useContext(GridContext);
     const board = useContext(BoardContext);
     const lastM = useContext(lastMove);
+    const playerSig = useContext(PlayerStrgContext);
     const square = grid[pos.y][pos.x];
+    const ref = useSignal(undefined);
     // dynamic tailwind bad bad
     const className = `width:${size}px; height:${size}px;`;
     console.log(pos);
@@ -22,15 +36,12 @@ export const SquarePTag = component$<SquarePTagProps>(
         return;
       }
       lastM.value = pos;
-      let strg = "O";
-      if (isXTurn) {
-        strg = "X";
-      }
-      square.value = strg as SquareValues;
+      square.value = playerSig.value as SquareValues;
       board.push(grid);
     });
     return (
       <p
+        ref={ref}
         style={className}
         class="flex items-center justify-center"
         onPointerDown$={setSquare}
