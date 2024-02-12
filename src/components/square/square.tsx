@@ -7,11 +7,11 @@ import {
 } from "@builder.io/qwik";
 import {
   BoardContext,
-  Grid2dArr,
+  type Grid2dArr,
   GridContext,
   PlayerStrgContext,
-  lastMove,
-} from "../grid/grid";
+  LastMoveContext,
+} from "../grid/context-ids";
 import { Point } from "../grid/utils";
 
 export interface SquarePTagProps {
@@ -24,7 +24,7 @@ export const SquarePTag = component$<SquarePTagProps>(
   ({ size, isXTurn, pos }) => {
     const grid = useContext(GridContext);
     const board = useContext(BoardContext);
-    const lastM = useContext(lastMove);
+    const lastM = useContext(LastMoveContext);
     const playerSig = useContext(PlayerStrgContext);
     const square = grid[pos.y][pos.x];
     const ref = useSignal(undefined);

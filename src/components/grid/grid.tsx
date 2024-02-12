@@ -10,23 +10,21 @@ import {
 } from "@builder.io/qwik";
 import { SquarePTag, type SquareValues } from "../square/square";
 import { type Point, solve } from "./utils";
-import { table } from "console";
+import {
+  BoardContext,
+  Grid2dArr,
+  GridContext,
+  LastMoveContext,
+  PlayerStrgContext,
+} from "./context-ids";
 type GridContextProps = {
   isXTurnSig: Signal<boolean>;
   grid: Signal<Grid2dArr>;
 };
-export type Grid1DArr = Signal<SquareValues>[];
-export type Grid2dArr = Array<Grid1DArr>;
 export interface GridProps {
   rows: number;
   colunms: number;
 }
-type Board = Grid2dArr[];
-export const BoardContext = createContextId<Board>("board.context");
-export const GridContext = createContextId<Grid2dArr>("grid.context");
-export const PlayerStrgContext =
-  createContextId<Signal<"X" | "O">>("isX.context");
-export const lastMove = createContextId<Signal<Point>>("lastM.context");
 export type GridRowAndColProps = {
   index: number;
   max: number;
@@ -53,10 +51,11 @@ export const Grid = component$<GridProps>((props) => {
   const grid = getGrid(props.colunms, props.rows);
   const lastM = useSignal<Point>({ x: -1, y: -1 });
   const playerSig = useSignal<SquareValues>("O");
+  const isGameWon = useSignal(false);
   console.log("fav grid ", grid);
   useContextProvider(GridContext, grid);
   useContextProvider(BoardContext, [grid]);
-  useContextProvider(lastMove, lastM);
+  useContextProvider(LastMoveContext, lastM);
   useContextProvider(PlayerStrgContext, playerSig);
   useTask$(({ track }) => {
     track(() => {
@@ -73,6 +72,7 @@ export const Grid = component$<GridProps>((props) => {
     console.table(grid.map((e) => e.map((e) => e.value)));
 
     if (answer.length === 3) {
+      isGameWon.value = true;
       console.log("ding ding ding");
     }
     playerSig.value = nextPlyr;
