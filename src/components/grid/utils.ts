@@ -1,5 +1,5 @@
 import { SquareValues } from "../square/square";
-import { type Grid2dArr } from "./grid";
+import { Grid2dArr } from "./context-ids";
 
 export type Point = {
   x: number;
@@ -31,16 +31,24 @@ export function find3() {
 }
 export function solve(
   maze: Grid2dArr,
-  wall: string,
   key: SquareValues,
   start: Point,
 ): ValueProps {
   const [seen, path, values] = getWalkArgs(maze);
-  const found = walk(maze, wall, key, start, seen, path, values, "diago");
+  const found = walk(
+    maze,
+    getWalls(key),
+    key,
+    start,
+    seen,
+    path,
+    values,
+    "diago",
+  );
   // the second conditon is bc of false neg
   if (!found && values.length !== 3) {
     const [seen, path, values] = getWalkArgs(maze);
-    walk(maze, wall, key, start, seen, path, values, "ortho");
+    walk(maze, getWalls(key), key, start, seen, path, values, "ortho");
     return values;
   }
   return values;
@@ -48,7 +56,7 @@ export function solve(
 
 function walk(
   maze: Grid2dArr,
-  wall: string,
+  walls: string[],
   key: SquareValues,
   curr: Point,
   seen: boolean[][],
@@ -64,7 +72,7 @@ function walk(
   }
 
   const entry = maze[curr.y][curr.x];
-  if (maze[curr.y][curr.x].value === wall) {
+  if (walls.some((elem) => elem === entry.value)) {
     return false;
   }
   if (values.length === 3) {
@@ -80,7 +88,6 @@ function walk(
     const appliedDir = last?.dir ?? -1;
     if (values.length > 0 && idx !== -1 && appliedDir !== -1) {
       if (!isPair(idx, appliedDir)) {
-        console.log("new boi ", appliedDir, idx);
         // this only works because arr is size 3,
         // the dynamic solution is to make the arr equal the last two elems,
         // which for a size 3 arr is always the case with shift
@@ -95,9 +102,11 @@ function walk(
   seen[curr.y][curr.x] = true;
   const dir = strat === "ortho" ? dirOrth : dirDiago;
   for (let index = 0; index < dir.length; index++) {
+    console.log("mercy ", curr);
+
     const [x, y] = dir[index];
     const newPoint = { x: curr.x + x, y: curr.y + y };
-    if (walk(maze, wall, key, newPoint, seen, path, values, strat, index)) {
+    if (walk(maze, walls, key, newPoint, seen, path, values, strat, index)) {
       return true;
     }
   }
@@ -125,4 +134,10 @@ function getWalkArgs(maze: Grid2dArr): [boolean[][], Point[], ValueProps] {
     seen.push(new Array(maze[0].length).fill(false));
   }
   return [seen, path, values];
+}
+function getWalls(player: SquareValues) {
+  if (player === "X") {
+    return [" ", "O"];
+  }
+  return [" ", "X"];
 }
