@@ -4,6 +4,7 @@ import {
   useContext,
   createContextId,
   useSignal,
+  PropsOf,
 } from "@builder.io/qwik";
 import {
   BoardContext,
@@ -12,6 +13,7 @@ import {
   PlayerStrgContext,
   LastMoveContext,
   GameWContext,
+  GridElemContext,
 } from "../grid/context-ids";
 import { Point } from "../grid/utils";
 
@@ -24,16 +26,20 @@ export type SquareValues = " " | "X" | "O";
 export const SquarePTag = component$<SquarePTagProps>(
   ({ size, isXTurn, pos }) => {
     const grid = useContext(GridContext);
+    const elemGrid = useContext(GridElemContext);
     const board = useContext(BoardContext);
     const lastM = useContext(LastMoveContext);
     const playerSig = useContext(PlayerStrgContext);
     const square = grid[pos.y][pos.x];
+    // const square = { value: "X" };
     const isW = useContext(GameWContext);
-    const ref = useSignal(undefined);
+    const ref = elemGrid[pos.y][pos.x];
     // dynamic tailwind bad bad
     const className = `width:${size}px; height:${size}px;`;
     console.log(pos);
     const setSquare = $(() => {
+      console.log(elemGrid);
+
       if (square.value !== " " || isW.value) {
         return;
       }
